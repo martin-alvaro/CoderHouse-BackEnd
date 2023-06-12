@@ -1,0 +1,33 @@
+[{
+    "id": 1,
+    "title": "Camiseta Brasil",
+    "description": "Descripcion del producto 1",
+    "price": 15000,
+    "thumbnail": "imagen1.jpg",
+    "code": 1,
+    "stock": 32
+}, {
+    "id": 2,
+    "title": "Camiseta Alemania",
+    "description": "Descripcion del producto 2",
+    "price": 12999,
+    "thumbnail": "imagen2.jpg",
+    "code": 12,
+    "stock": 17
+}, {
+    "id": 3,
+    "title": "Camiseta Italia",
+    "description": "Descripcion del producto 3",
+    "price": 12500,
+    "thumbnail": "imagen3.jpg",
+    "code": 123,
+    "stock": 14
+}, {
+    "id": 4,
+    "title": "Camiseta Argentina",
+    "description": "Descripcion del producto 4",
+    "price": 13000,
+    "thumbnail": "imagen1.jpg",
+    "code": 1234,
+    "stock": 25
+}]
