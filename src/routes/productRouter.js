@@ -63,7 +63,9 @@ router.get('/:pid', (req, res, next) => {
         category,
         thumbnails
       );
-  
+
+      socketServer.emit('productAdded', addedProduct);
+
       res.json({
         message: 'Product added!!',
         addedProduct: addedProduct
@@ -85,7 +87,6 @@ router.put('/:pid', (req, res, next) => {
       if (updatedProduct === 'Product not found') {
         return res.status(404).json({ error: 'Product not found' });
       }
-  
       res.json({
         message: `Product updated: ${pid}`,
         updatedProduct: updatedProduct
@@ -103,7 +104,8 @@ router.put('/:pid', (req, res, next) => {
       if (deletedProduct === 'Product not found') {
         return res.status(404).json({ error: 'Product not found' });
       }
-  
+      
+      socketServer.emit('productDeleted', pid);
       res.json({
         message: `Product deleted: ${pid}`,
         deletedProduct: deletedProduct[0]

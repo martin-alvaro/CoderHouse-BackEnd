@@ -1,5 +1,6 @@
 import fs from 'fs'
-class ProductManager {
+import { __dirname } from '../utils.js';
+class ProductManager {  
   constructor(path) {
     this.path = path;
     this.products = [];
@@ -8,14 +9,14 @@ class ProductManager {
   /*-----------------------------------------------------------------------------------------------------------*/
   addProduct(title, description, code, price, stock, category, thumbnails = []) {
     if (!title || !description || !code || !price || !stock || !category) {
-      return 'Please complete all required fields!!';
+      return 'Please complete all required fields!';
     }
-  
+
     try {
       this.getProducts();
-  
+
       const id = this.products.length + 1;
-  
+
       const newProduct = {
         id,
         title,
@@ -25,18 +26,18 @@ class ProductManager {
         status: true,
         stock,
         category,
-        thumbnails: Array.isArray(thumbnails) ? thumbnails : [thumbnails]
+        thumbnails: Array.isArray(thumbnails) ? thumbnails : [thumbnails],
       };
-  
+
       this.products.push(newProduct);
-  
+
       fs.writeFileSync(this.path, JSON.stringify(this.products));
-  
-      console.log('Product added!!');
+
+      console.log('Product added!');
       return newProduct;
     } catch (error) {
-      console.error(error);
-      return 'Error adding product:';
+      console.error('Error adding product:', error);
+      return 'Error adding product!';
     }
   }
   

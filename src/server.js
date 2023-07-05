@@ -1,35 +1,46 @@
 import express from 'express'
+import { Server} from 'socket.io'
 import productRouter from './routes/productRouter.js'
 import cartRouter from './routes/cartRouter.js'
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
+import viewsRouter from './routes/viewsRouter.js' 
+import { __dirname } from './utils.js';
 import { errorHandler } from './middlewares/errorHandler.js'
+import handlebars from 'express-handlebars'
 
 /*-----------------------------------------------------------------------------------------------------------*/
-const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express()
 const PORT = 8080
-
-/*-----------------------------------------------------------------------------------------------------------*/
-app.get('/', (req, res)=>{
-    res.send('Mi primer servidor con express')
-})
-app.listen(PORT, ()=>{
+const httpServer = app.listen(PORT, ()=>{
     console.log("The server is already running on port: " + PORT)
+})
+const socketServer = new Server(httpServer)
+
+socketServer.on('connection', (socket)=>{
+    console.log(`Usuario conectado: ${socket.id}`)
+    
+    socket.on('disconnect', ()=>{
+        console.log(`Usuario desconectado`)
+    })
+    socket.emit('saludoDesdeBack', 'Bienvenido a WebSocket')
 })
 
 /*-----------------------------------------------------------------------------------------------------------*/
 app.use(express.json())
-
 app.use(express.urlencoded({extended:true}))
-
-app.use('/api/products', productRouter)
-
-app.use('/api/carts', cartRouter)
-
 app.use(express.static(__dirname + '/public'))
 
+app.use('/', viewsRouter)
+app.use('/api/products', productRouter)
+app.use('/api/carts', cartRouter)
+
+
+app.engine('handlebars', handlebars.engine())
+app.set('views', __dirname + '/views')
+app.set('view engine', 'handlebars')
+
 app.use(errorHandler)
+
+
 
 
 

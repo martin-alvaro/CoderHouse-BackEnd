@@ -1,41 +1,41 @@
 [{
     "id": 1,
     "title": "Camiseta Brasil",
-    "description": "Descripcion del producto 1",
+    "description": "Descripcion de la camiseta de Brasil",
     "code": 1,
     "price": 15000,
     "status": true,
     "stock": 32,
     "category": "camiseta",
-    "thumbnails": ["imagen1.jpg"]
+    "thumbnails": ["https://mezzalacamisetas.com.ar/wp-content/uploads/2022/10/3-3.png"]
 }, {
     "id": 2,
     "title": "Camiseta Alemania",
-    "description": "Descripcion del producto 2",
+    "description": "Descripcion de la camiseta de Alemania",
     "code": 12,
     "price": 12999,
     "status": true,
     "stock": 17,
     "category": "camiseta",
-    "thumbnails": ["imagen2.jpg"]
+    "thumbnails": ["https://essential.vtexassets.com/arquivos/ids/930067-800-auto?v=638235602288630000&width=800&height=auto&aspect=true"]
 }, {
     "id": 3,
     "title": "Camiseta Italia",
-    "description": "Descripcion del producto 3",
+    "description": "Descripcion de la camiseta de Italia",
     "code": 123,
     "price": 12500,
     "status": true,
     "stock": 14,
     "category": "camiseta",
-    "thumbnails": ["imagen3.jpg"]
+    "thumbnails": ["https://thunderinternacional.com/cdn/shop/products/ITALY23HOMEJERSEY_823x_9258416c-5d20-4330-9c32-65b151dd3bd1.jpg?v=1681390487&width=493"]
 }, {
     "id": 4,
     "title": "Camiseta Argentina",
-    "description": "Descripcion del producto 4",
+    "description": "Descripcion de la camiseta de Argentina",
     "code": 1234,
     "price": 13000,
     "status": true,
     "stock": 25,
     "category": "camiseta",
-    "thumbnails": ["imagen4.jpg"]
+    "thumbnails": ["https://sporting.vtexassets.com/arquivos/ids/745385-800-800?v=638144070712970000&width=800&height=800&aspect=true"]
 }]
