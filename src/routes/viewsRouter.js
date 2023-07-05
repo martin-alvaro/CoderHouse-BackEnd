@@ -13,5 +13,13 @@ router.get('/', (req, res) => {
     }
 });
 
+router.get('/realtimeproducts', (req, res) => {
+  try {
+      const products = JSON.parse(fs.readFileSync('./data/products.json', 'utf-8'));
+      res.render('realTimeProducts', { products });
+  } catch (error) {
+      res.render('realTimeProducts', { products: [] });
+  }
+});
 
 export default router;
