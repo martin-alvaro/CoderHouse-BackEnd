@@ -1,5 +1,6 @@
 import { Router } from "express";
 import ProductManager from '../managers/productManager.js'
+import { socketServer } from '../server.js';
 
 /*-----------------------------------------------------------------------------------------------------------*/
 const productManager = new ProductManager('./data/products.json');
@@ -63,6 +64,9 @@ router.get('/:pid', (req, res, next) => {
         category,
         thumbnails
       );
+
+      socketServer.emit('newProduct', newProduct);
+
       res.json({
         message: 'Product added!!',
         addedProduct: addedProduct
@@ -101,6 +105,9 @@ router.put('/:pid', (req, res, next) => {
       if (deletedProduct === 'Product not found') {
         return res.status(404).json({ error: 'Product not found' });
       }
+
+      socketServer.emit('productDeleted', deletedProduct);
+
       res.json({
         message: `Product deleted: ${pid}`,
         deletedProduct: deletedProduct[0]

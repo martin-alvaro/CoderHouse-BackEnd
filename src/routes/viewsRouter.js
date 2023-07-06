@@ -1,25 +1,17 @@
-import { Router } from "express";
-import { __dirname } from "../utils.js";
-import fs from "fs";
+import express from 'express';
+import ProductManager from '../managers/productManager.js';
 
-const router = Router();
+const router = express.Router();
+const productManager = new ProductManager('./data/products.json');
 
 router.get('/', (req, res) => {
-    try {
-        const products = JSON.parse(fs.readFileSync('./data/products.json', 'utf-8'));
-        res.render('home', { products});
-    } catch (error) {
-        res.render('home', { products: [] });
-    }
+  const products = productManager.getProducts();
+  res.render('home', { products });
 });
 
 router.get('/realtimeproducts', (req, res) => {
-  try {
-      const products = JSON.parse(fs.readFileSync('./data/products.json', 'utf-8'));
-      res.render('realTimeProducts', { products });
-  } catch (error) {
-      res.render('realTimeProducts', { products: [] });
-  }
+  const products = productManager.getProducts();
+  res.render('realTimeProducts', { products });
 });
 
 export default router;
