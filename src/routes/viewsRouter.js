@@ -1,17 +1,26 @@
 import express from 'express';
-import ProductManager from '../managers/productManager.js';
+import * as productService from "../services/products.services.js";
 
 const router = express.Router();
-const productManager = new ProductManager('./data/products.json');
 
-router.get('/', (req, res) => {
-  const products = productManager.getProducts();
-  res.render('home', { products });
+router.get("/", async (req, res) => {
+  try {
+    const products = await productService.getAll();
+    const plainProducts = products.map((product) => product.toObject());
+    res.render("home", { products: plainProducts });
+  } catch (error) {
+    res.render("error", { message: error, code: 500 });
+  }
 });
 
-router.get('/realtimeproducts', (req, res) => {
-  const products = productManager.getProducts();
-  res.render('realTimeProducts', { products });
+router.get("/realtimeproducts", async (req, res) => {
+  try {
+    const products = await productService.getAll();
+    const plainProducts = products.map((product) => product.toObject());
+    res.render("realTimeProducts", { products: plainProducts });
+  } catch (error) {
+    res.render("error", { message: error, code: 500 });
+  }
 });
 
-export default router;
+  export default router;

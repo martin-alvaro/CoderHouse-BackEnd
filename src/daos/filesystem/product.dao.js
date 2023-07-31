@@ -1,13 +1,14 @@
 import fs from 'fs'
-import { __dirname } from '../utils.js';
-class ProductManager {  
+
+
+class ProductDaoFS {  
   constructor(path) {
     this.path = path;
     this.products = [];
   }
 
   /*-----------------------------------------------------------------------------------------------------------*/
-  addProduct(title, description, code, price, stock, category, thumbnails = []) {
+  create(title, description, code, price, stock, category, thumbnails = []) {
     if (!title || !description || !code || !price || !stock || !category) {
       return 'Please complete all required fields!';
     }
@@ -42,7 +43,7 @@ class ProductManager {
   }
   
   /*-----------------------------------------------------------------------------------------------------------*/
-  getProducts() {
+  getAll() {
     try {
       if (fs.existsSync(this.path)) {
         const data = fs.readFileSync(this.path, 'utf8');
@@ -59,7 +60,7 @@ class ProductManager {
   }
 
   /*-----------------------------------------------------------------------------------------------------------*/
-  getProductById(id) {
+  getById(id) {
     try {
       this.getProducts();
 
@@ -77,7 +78,7 @@ class ProductManager {
   }
   
   /*-----------------------------------------------------------------------------------------------------------*/
-  updateProduct(pid, data) {
+  update(pid, data) {
     try {
       this.getProducts();
   
@@ -97,7 +98,7 @@ class ProductManager {
   }
   
   /*-----------------------------------------------------------------------------------------------------------*/
-  deleteProduct(id) {
+  delete(id) {
     try {
       this.getProducts();
 
@@ -118,4 +119,4 @@ class ProductManager {
   
 }
 
-export default ProductManager;
+export default ProductDaoFS;
