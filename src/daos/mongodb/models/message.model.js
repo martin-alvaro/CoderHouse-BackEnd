@@ -6,4 +6,4 @@ const messagesSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now },
 });
 
-export const messageModel = mongoose.model("messages", messagesSchema);
+export const MessageModel = mongoose.model("messages", messagesSchema);

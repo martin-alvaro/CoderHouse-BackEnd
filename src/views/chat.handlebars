@@ -1,0 +1,18 @@
+<div id="chat-container">
+  <div id="chat-window">
+    <div id="output">
+      {{#each messages as |message|}}
+        <p>
+          <strong>{{message.username}}:</strong> {{message.message}}
+        </p>
+        {{/each}}
+      </div>
+    <div id="actions"></div>
+  </div>
+  <form id="chat-message-form">
+    <input type="text" id="message" name="message" placeholder="Message" class="chat-input" autocomplete="off" />
+    <input type="submit" id="send" class="chat-button" value="Send">
+  </form>
+</div>
+
+<script src="/js/chat.js" charset="utf-8"></script>

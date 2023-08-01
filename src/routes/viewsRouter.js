@@ -1,7 +1,8 @@
-import express from 'express';
+import { Router } from "express";
 import * as productService from "../services/products.services.js";
+import * as messageService from "../services/messages.service.js";
 
-const router = express.Router();
+const router = Router();
 
 router.get("/", async (req, res) => {
   try {
@@ -23,4 +24,14 @@ router.get("/realtimeproducts", async (req, res) => {
   }
 });
 
-  export default router;
+router.get("/chat", async (req, res) => {
+  try {
+    const messages = await messageService.getAll();
+    const plainMessages = messages.map((message) => message.toObject());
+    res.render("chat", { messages: plainMessages });
+  } catch (error) {
+    res.render("error", { message: error, code: 500 });
+  }
+});
+
+export default router;
