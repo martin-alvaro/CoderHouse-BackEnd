@@ -24,6 +24,8 @@ router.get("/realtimeproducts", async (req, res) => {
   }
 });
 
+
+
 router.get("/chat", async (req, res) => {
   try {
     const messages = await messageService.getAll();
