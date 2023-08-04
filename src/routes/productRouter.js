@@ -118,7 +118,7 @@ const router = Router()
 //   });
   
 router.get('/', controller.getAll)
-router.get('/aggregation', controller.aggregation)  // <-- Definir esta ruta antes de las rutas que esperan un ID
+router.get('/aggregation', controller.aggregation)
 router.get('/:id', controller.getById)
 router.post('/', controller.create)
 router.put('/:id', controller.update)
