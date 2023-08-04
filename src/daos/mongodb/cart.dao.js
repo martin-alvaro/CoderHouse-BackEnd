@@ -49,3 +49,57 @@ export const addProductToCart = async (id, productId) => {
     console.log(error);
   }
 };
+
+export const removeProductFromCart = async (cartId, productId) => {
+  try {
+    const cart = await cartModel.findById(cartId);
+    cart.products = cart.products.filter(
+      (product) => product.id.toString() !== productId.toString()
+    );
+    await cart.save();
+    return cart;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateCartProducts = async (cartId, products) => {
+  try {
+    const cart = await cartModel.findById(cartId);
+    cart.products = products;
+    await cart.save();
+    return cart;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateProduct = async (cartId, productId, quantity) => {
+  try {
+    const cart = await cartModel.findById(cartId);
+    const productInCart = cart.products.find(
+      (prod) => prod.id.toString() === productId.toString()
+    );
+
+    if (productInCart) {
+      productInCart.quantity = quantity;
+      await cart.save();
+    }
+
+    return cart;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const removeAllProductsFromCart = async (cartId) => {
+  try {
+    const cart = await cartModel.findById(cartId);
+    cart.products = [];
+
+    await cart.save();
+    return cart;
+  } catch (error) {
+    console.log(error);
+  }
+};

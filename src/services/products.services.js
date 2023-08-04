@@ -2,14 +2,17 @@ import ProductDaoMongoDB from '../daos/mongodb/product.dao.js'
 const productDao = new ProductDaoMongoDB()
 
 
-export const getAll = async ()=>{
+export const getAll = async (page = 1, limit = 10, sort, query) => {
     try {
-        const response = await productDao.getAll()
-        return (response)
+      const filter = query ? { category: query } : {};
+      const sortOptions = sort === 'asc' ? { price: 1 } : sort === 'desc' ? { price: -1 } : {};
+  
+      const response = await productDao.getAll(page, limit, filter, sortOptions);
+      return response;
     } catch (error) {
-        console.log(error)
+      throw new Error(error.message);
     }
-}
+  };
 
 export const getById= async(id)=>{
     try {
@@ -50,5 +53,14 @@ export const remove = async (id)=>{
           return response;
     } catch (error) {
         
+    }
+}
+
+export const aggregation = async()=>{
+    try {
+        const aggregates = await productDao.aggregation()
+        return aggregates
+    } catch (error) {
+     console.log(error);
     }
 }

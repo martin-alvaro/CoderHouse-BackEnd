@@ -117,10 +117,12 @@ const router = Router()
 //     }
 //   });
   
-  router.get('/', controller.getAll)
-  router.get('/:id', controller.getById)
-  router.post('/', controller.create)
-  router.put('/:id', controller.update)
-  router.delete('/:id', controller.remove)
+router.get('/', controller.getAll)
+router.get('/aggregation', controller.aggregation)  // <-- Definir esta ruta antes de las rutas que esperan un ID
+router.get('/:id', controller.getById)
+router.post('/', controller.create)
+router.put('/:id', controller.update)
+router.delete('/:id', controller.remove)
+
 
   export default router
