@@ -6,25 +6,29 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
+    console.log("Fetching products...");
     const products = await productService.getAll();
-    const plainProducts = products.map((product) => product.toObject());
+    const plainProducts = products.docs.map((product) => {
+      return { ...product.toObject(), _id: product._id.toString() };
+    });
     res.render("home", { products: plainProducts });
   } catch (error) {
-    res.render("error", { message: error, code: 500 });
+    res.json({ message: error.message, code: 500 });
   }
 });
 
 router.get("/realtimeproducts", async (req, res) => {
   try {
+    console.log("Fetching products...");
     const products = await productService.getAll();
-    const plainProducts = products.map((product) => product.toObject());
-    res.render("realTimeProducts", { products: plainProducts });
+    const plainProducts = products.docs.map((product) => {
+      return { ...product.toObject(), _id: product._id.toString() };
+    });
+    res.render("realtimeproducts", { products: plainProducts });
   } catch (error) {
-    res.render("error", { message: error, code: 500 });
+    res.json({ message: error.message, code: 500 });
   }
 });
-
-
 
 router.get("/chat", async (req, res) => {
   try {
@@ -32,7 +36,7 @@ router.get("/chat", async (req, res) => {
     const plainMessages = messages.map((message) => message.toObject());
     res.render("chat", { messages: plainMessages });
   } catch (error) {
-    res.render("error", { message: error, code: 500 });
+    res.json({ message: error, code: 500 });
   }
 });
 

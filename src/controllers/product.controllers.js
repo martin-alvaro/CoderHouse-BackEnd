@@ -7,14 +7,11 @@ export const getAll = async (req, res, next) => {
       console.log('Current page:', page);
       console.log('Current limit:', limit);
   
-      // Convertir el valor de "page" y "limit" a números enteros
       const parsedPage = parseInt(page, 10);
       const parsedLimit = parseInt(limit, 10);
   
-      // Asegúrate de que "sort" sea "asc" o "desc" para evitar errores
       const parsedSort = sort === 'asc' ? 'asc' : sort === 'desc' ? 'desc' : undefined;
   
-      // Llamar a la función de servicio para obtener los productos con paginación y ordenamiento
       const response = await service.getAll(parsedPage, parsedLimit, parsedSort, query);
   
       console.log('Query:', response.query);
