@@ -39,7 +39,6 @@ export const addProductToCart = async (req, res, next) => {
     console.log(`Product ID: ${productId}`);
 
     const cart = await service.addProductToCart(id, productId);
-    console.log("Cart after adding product:", cart);
 
     if (cart) {
       res.status(201).json(cart);
@@ -68,11 +67,11 @@ export const updateCart = async (req, res, next) => {
   }
 };
 
-export const updateProduct = async (req, res, next) => {
+export const updateProduct  = async (req, res, next) => {
   try {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
-    const cart = await service.updateProductQuantity(cid, pid, quantity);
+    const cart = await service.updateProduct(cid, pid, quantity);
     if (cart) {
       res.status(200).json(cart);
     } else {

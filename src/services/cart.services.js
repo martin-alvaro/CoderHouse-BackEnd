@@ -74,6 +74,11 @@ export const updateCart = async (cartId, products) => {
 export const updateProduct = async (cartId, productId, quantity) => {
   try {
     const cart = await cartDao.getById(cartId);
+
+    if (!cart) {
+      throw new Error("Cart not found");
+    }
+
     const productInCart = cart.products.find(
       (prod) => prod.id.toString() === productId.toString()
     );
@@ -88,6 +93,7 @@ export const updateProduct = async (cartId, productId, quantity) => {
     throw new Error(error.message);
   }
 };
+
 
 export const removeAllProductsFromCart = async (cartId) => {
   try {

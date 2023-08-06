@@ -30,6 +30,11 @@ export const create = async () => {
 export const addProductToCart = async (id, productId) => {
   try {
     const cart = await cartModel.findById(id);
+
+    if (!cart) {
+      throw new Error("Cart not found");
+    }
+
     const productInCart = cart.products.find(
       (prod) => prod.id.toString() === productId.toString()
     );
@@ -46,9 +51,10 @@ export const addProductToCart = async (id, productId) => {
     await cart.save();
     return cart;
   } catch (error) {
-    console.log(error);
+    throw new Error(error.message);
   }
 };
+
 
 export const removeProductFromCart = async (cartId, productId) => {
   try {

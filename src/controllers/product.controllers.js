@@ -4,8 +4,6 @@ import * as service from '../services/products.services.js'
 export const getAll = async (req, res, next) => {
     try {
       const { limit = 10, page = 1, sort, query } = req.query;
-      console.log('Current page:', page);
-      console.log('Current limit:', limit);
   
       const parsedPage = parseInt(page, 10);
       const parsedLimit = parseInt(limit, 10);
@@ -14,7 +12,6 @@ export const getAll = async (req, res, next) => {
   
       const response = await service.getAll(parsedPage, parsedLimit, parsedSort, query);
   
-      console.log('Query:', response.query);
   
       const totalPages = response.totalPages;
       const prevPage = parsedPage > 1 ? parsedPage - 1 : null;
