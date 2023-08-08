@@ -1,25 +1,26 @@
 import { Router } from "express";
 import * as productService from "../services/products.services.js";
 import * as messageService from "../services/messages.service.js";
+import {login,register,errorLogin,errorRegister, profile} from '../controllers/views.controller.js'
+
 
 const router = Router();
 
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    console.log("Fetching products...");
-    const products = await productService.getAll();
-    const plainProducts = products.docs.map((product) => {
-      return { ...product.toObject(), _id: product._id.toString() };
-    });
-    res.render("home", { products: plainProducts });
+      const user = req.session.user;
+      const products = await productService.getAll();
+      const plainProducts = products.docs.map((product) => {
+          return { ...product.toObject(), _id: product._id.toString() };
+      });
+      res.render('home', { user, products: plainProducts });
   } catch (error) {
-    res.json({ message: error.message, code: 500 });
+      res.json({ message: error.message, code: 500 });
   }
 });
 
 router.get("/realtimeproducts", async (req, res) => {
   try {
-    console.log("Fetching products...");
     const products = await productService.getAll();
     const plainProducts = products.docs.map((product) => {
       return { ...product.toObject(), _id: product._id.toString() };
@@ -39,5 +40,12 @@ router.get("/chat", async (req, res) => {
     res.json({ message: error, code: 500 });
   }
 });
+
+router.get('/login' , login)
+router.get('/register' , register)
+router.get('/errorLogin' , errorLogin)
+router.get('/errorRegister' , errorRegister)
+router.get('/profile', profile)
+
 
 export default router;
