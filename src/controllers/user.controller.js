@@ -26,6 +26,16 @@ export const loginUser = async (req, res) => {
     }
 };
 
+export const logoutUser = (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect('/');
+      }
+    });
+  };
+  
 
 
 
