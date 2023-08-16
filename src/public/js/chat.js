@@ -19,7 +19,6 @@
     });
   }
 
-  // const message = document.getElementById("message");
   const button = document.getElementById("send");
   const output = document.getElementById("output");
   const actions = document.getElementById("actions");
