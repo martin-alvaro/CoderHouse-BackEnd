@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as controller from '../controllers/product.controllers.js'
+import { isAdmin } from "../middlewares/authorize.js";
 // import { socketServer } from '../server.js';
 
 /*-----------------------------------------------------------------------------------------------------------*/
@@ -120,9 +121,9 @@ const router = Router()
 router.get('/', controller.getAll)
 router.get('/aggregation', controller.aggregation)
 router.get('/:id', controller.getById)
-router.post('/', controller.create)
-router.put('/:id', controller.update)
-router.delete('/:id', controller.remove)
+router.post('/', isAdmin, controller.create)
+router.put('/:id', isAdmin, controller.update);
+router.delete('/:id', isAdmin, controller.remove);
 
 
   export default router

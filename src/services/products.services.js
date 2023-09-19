@@ -1,4 +1,5 @@
 import ProductDaoMongoDB from '../daos/mongodb/product.dao.js'
+import { ProductDTO } from '../dto/product.dto.js';
 const productDao = new ProductDaoMongoDB()
 
 
@@ -25,24 +26,47 @@ export const getById= async(id)=>{
     }
 }
 
-export const create = async (obj)=>{
+export const create = async (productData) => {
     try {
-        const newProduct = await productDao.create(obj)
-        if(!newProduct) return false
-        else return newProduct
+      // Crear una instancia del DTO usando los datos recibidos
+      const productDTO = new ProductDTO(
+        productData.title,
+        productData.description,
+        productData.price,
+        productData.category,
+        productData.code,
+        productData.stock,
+        productData.thumbnails,
+        productData.status
+      );
+  
+      const newProduct = await productDao.create(productDTO);
+  
+      return newProduct;
     } catch (error) {
-        console.log(error)
+      throw new Error(error.message);
     }
-}
-
-export const update = async (id, obj)=>{
+  };
+  
+  export const update = async (id, productData) => {
     try {
-        const response = await productDao.update(id, obj)
-        return response 
+      const productDTO = new ProductDTO(
+        productData.title,
+        productData.description,
+        productData.price,
+        productData.category,
+        productData.code,
+        productData.stock,
+        productData.thumbnails,
+        productData.status
+      );
+  
+      const response = await productDao.update(id, productDTO);
+      return response;
     } catch (error) {
-        
+      throw new Error(error.message);
     }
-}
+  };
 
 export const remove = async (id)=>{
     try {

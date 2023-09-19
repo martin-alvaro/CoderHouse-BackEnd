@@ -16,7 +16,7 @@ export const getById = async (req, res, next) => {
     if (cart) {
       res.status(200).json(cart);
     } else {
-      res.status(404).json({ mesagge: "Cart not found" });
+      res.status(404).json({ message: "Cart not found" });
     }
   } catch (error) {
     next(error);
@@ -35,9 +35,6 @@ export const create = async (req, res, next) => {
 export const addProductToCart = async (req, res, next) => {
   try {
     const { id, productId } = req.params;
-    console.log(`Cart ID: ${id}`);
-    console.log(`Product ID: ${productId}`);
-
     const cart = await service.addProductToCart(id, productId);
 
     if (cart) {
@@ -50,7 +47,6 @@ export const addProductToCart = async (req, res, next) => {
     next(error);
   }
 };
-
 
 export const updateCart = async (req, res, next) => {
   try {
@@ -67,7 +63,7 @@ export const updateCart = async (req, res, next) => {
   }
 };
 
-export const updateProduct  = async (req, res, next) => {
+export const updateProduct = async (req, res, next) => {
   try {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
@@ -104,6 +100,29 @@ export const removeAllProductsFromCart = async (req, res, next) => {
       res.status(200).json(cart);
     } else {
       res.status(404).json({ message: "Cart not found" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const purchaseCart = async (req, res, next) => {
+  try {
+    const { cid } = req.params;
+    const cart = await service.getById(cid);
+
+    if (!cart) {
+      res.status(404).json({ message: "Cart not found" });
+      return;
+    }
+
+    const purchaserEmail = req.session.user.email;
+    const purchaseResult = await service.purchaseCart(cid, purchaserEmail);
+
+    if (purchaseResult.error) {
+      res.status(400).json({ message: purchaseResult.error, ticket: purchaseResult.ticket });
+    } else {
+      res.status(200).json({ message: purchaseResult.message, ticket: purchaseResult.ticket });
     }
   } catch (error) {
     next(error);

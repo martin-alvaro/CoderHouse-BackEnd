@@ -15,5 +15,6 @@ export const create = async (message) => {
     return newMessage;
   } catch (error) {
     console.log(error);
+    return null;
   }
 };

@@ -1,30 +1,77 @@
-import UserDao from '../daos/mongodb/user.dao.js'
+import UserDao from '../daos/mongodb/user.dao.js';
+import { UserDTO } from '../dto/user.dto.js';
+import transporter from '../mailling/transporter.js';
 
-const userDao  = new UserDao
+const userDao = new UserDao();
 
-export const registerUser = async(req,res)=>{
-    try {
-        const newUser = await userDao.registerUser(req.body);
-        if(newUser) res.redirect('/login');
-        else res.redirect('/errorRegister');
-    } catch (error) {
-        console.log(error);
+export const registerUser = async (req, res) => {
+  try {
+    const { email, password, first_name, last_name, isGithub, age } = req.body; 
+    const userDTO = new UserDTO(email, password, first_name, last_name, isGithub, age);
+    console.log('age ==' + age)
+    const newUser = await userDao.registerUser(userDTO);
+    if (newUser) {
+  
+      const mailOptions = {
+        from: 'martinalvaro3175@gmail.com',
+        to: email, 
+        subject: '¡Bienvenido a nuestra aplicación!', 
+        text: 'Gracias por registrarte en nuestra aplicación. ¡Esperamos que disfrutes tu experiencia!',
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Correo electrónico de bienvenida enviado:', info.response);
+        }
+      });
+
+      res.redirect('/login');
+    } else {
+      res.redirect('/errorRegister');
     }
-}
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const loginUser = async (req, res) => {
   try {
-      const user = await userDao.loginUser(req.body);
-      if (user) {
-          req.session.user = user;
-          res.redirect('/');
-      } else {
-          res.redirect('/errorLogin');
-      }
+    const { email, password } = req.body;
+    const userDTO = new UserDTO(email, password);
+    const user = await userDao.loginUser(userDTO);
+    if (user) {
+      req.session.user = user;
+      res.redirect('/'); 
+    } else {
+      res.redirect('/errorLogin');
+    }
   } catch (error) {
-      console.log(error);
+    console.log(error);
   }
 };
+
+export const getCurrentUser = async (req, res) => {
+  try {
+    const user = req.session.user;
+    
+    const currentUserDTO = {
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      age: user.age,
+      role: user.role
+    };
+
+    res.json(currentUserDTO);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+};
+
+
 
 
 export const logoutUser = (req, res) => {

@@ -51,22 +51,34 @@ export const getById = async(req,res,next)=>{
     }
 }
 
-export const create = async(req,res,next)=>{
-try {
-    const newProd = await service.create(req.body)
-    if(!newProd)  res.status(404).json({msg: 'Validation error!!'})   
-    else res.json(newProd)   
-} catch (error) {
-    next(error.message)
-}}
-
-export const update = async(req,res,next)=>{try {
-    const {id} = req.params
-    const updateProd = await service.update(id, req.body)
-    res.json(updateProd)
-} catch (error) {
-    next(error.message)
-}}
+export const create = async (req, res, next) => {
+    try {
+      const productData = req.body;
+      const newProduct = await service.create(productData);
+      res.status(201).json({
+        status: 'success',
+        message: 'Product created successfully',
+        data: newProduct,
+      });
+    } catch (error) {
+      next(error.message);
+    }
+  };
+  
+  export const update = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const productData = req.body;
+      const updatedProduct = await service.update(id, productData);
+      res.status(200).json({
+        status: 'success',
+        message: 'Product updated successfully',
+        data: updatedProduct,
+      });
+    } catch (error) {
+      next(error.message);
+    }
+  };
 
 export const remove = async(req,res,next)=>{
     try {

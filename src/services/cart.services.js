@@ -1,5 +1,6 @@
 import ProductDaoMongoDB from "../daos/mongodb/product.dao.js";
 import * as cartDao from "../daos/mongodb/cart.dao.js";
+import * as ticketService from "./ticket.service.js";
 
 const productDao = new ProductDaoMongoDB();
 
@@ -34,47 +35,6 @@ export const addProductToCart = async (id, productId) => {
   try {
     const cart = await cartDao.getById(id);
 
-
-    const product = await productDao.getById(productId);
-
-    if (!product) throw new Error("Product not found");
-    if (!cart) throw new Error("Cart not found");
-
-    const newCart = await cartDao.addProductToCart(id, productId);
-    return newCart;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const removeProductFromCart = async (cartId, productId) => {
-  try {
-    const cart = await cartDao.getById(cartId);
-    cart.products = cart.products.filter(
-      (product) => product.id.toString() !== productId.toString()
-    );
-    await cart.save();
-    return cart;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
-
-export const updateCart = async (cartId, products) => {
-  try {
-    const cart = await cartDao.getById(cartId);
-    cart.products = products;
-    await cart.save();
-    return cart;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
-
-export const updateProduct = async (cartId, productId, quantity) => {
-  try {
-    const cart = await cartDao.getById(cartId);
-
     if (!cart) {
       throw new Error("Cart not found");
     }
@@ -84,25 +44,121 @@ export const updateProduct = async (cartId, productId, quantity) => {
     );
 
     if (productInCart) {
-      productInCart.quantity = quantity;
-      await cart.save();
+      productInCart.quantity++;
+    } else {
+      cart.products.push({
+        id: productId,
+        quantity: 1,
+      });
     }
 
+    await cartDao.updateCart(id, cart.products);
     return cart;
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
-
-export const removeAllProductsFromCart = async (cartId) => {
+export const updateCart = async (id, products) => {
   try {
-    const cart = await cartDao.getById(cartId);
-    cart.products = [];
-
-    await cart.save();
+    const cart = await cartDao.getById(id);
+    cart.products = products;
+    await cartDao.updateCart(id, cart.products);
     return cart;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const updateProduct = async (id, productId, quantity) => {
+  try {
+    const cart = await cartDao.getById(id);
+    const productInCart = cart.products.find(
+      (prod) => prod.id.toString() === productId.toString()
+    );
+
+    if (productInCart) {
+      productInCart.quantity = quantity;
+      await cartDao.updateCart(id, cart.products);
+    }
+
+    return cart;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const removeProductFromCart = async (id, productId) => {
+  try {
+    const cart = await cartDao.getById(id);
+    cart.products = cart.products.filter(
+      (product) => product.id.toString() !== productId.toString()
+    );
+    await cartDao.updateCart(id, cart.products);
+    return cart;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const removeAllProductsFromCart = async (id) => {
+  try {
+    const cart = await cartDao.getById(id);
+    cart.products = [];
+    await cartDao.updateCart(id, cart.products);
+    return cart;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const purchaseCart = async (cartId, purchaserEmail) => {
+  try {
+    const cart = await cartDao.getById(cartId);
+
+    if (!cart) {
+      return { error: "Cart not found" };
+    }
+
+    let totalAmount = 0;
+    const productsToUpdate = [];
+    const productsNotPurchased = [];
+
+    for (const productInCart of cart.products) {
+      const product = await productDao.getById(productInCart.id);
+
+      if (!product || product.stock < productInCart.quantity) {
+        productsNotPurchased.push(productInCart.id);
+      } else {
+        totalAmount += product.price * productInCart.quantity;
+        productsToUpdate.push({ id: productInCart.id, quantity: productInCart.quantity });
+      }
+    }
+
+    if (productsNotPurchased.length > 0) {
+      const ticketData = {
+        code: generateUniqueTicketCode(), 
+        purchase_datetime: new Date(),
+        amount: totalAmount,
+        purchaser: purchaserEmail,
+      };
+
+      const ticket = await ticketService.create(ticketData);
+
+      await updateCart(cartId, productsToUpdate);
+
+      return { error: "Insufficient stock for one or more products", ticket };
+    } else {
+      for (const productToUpdate of productsToUpdate) {
+        await updateProductStock(productToUpdate.id, productToUpdate.quantity);
+      }
+
+      await removeAllProductsFromCart(cartId);
+
+      return { message: "Purchase completed successfully", ticket: null };
+    }
+  } catch (error) {
+    console.log(error);
+    return { error: "An error occurred during the purchase process", ticket: null };
   }
 };
