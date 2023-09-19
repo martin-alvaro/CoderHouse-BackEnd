@@ -28,7 +28,6 @@ export const getById= async(id)=>{
 
 export const create = async (productData) => {
     try {
-      // Crear una instancia del DTO usando los datos recibidos
       const productDTO = new ProductDTO(
         productData.title,
         productData.description,
