@@ -110,20 +110,28 @@ export const purchaseCart = async (req, res, next) => {
   try {
     const { cid } = req.params;
     const cart = await service.getById(cid);
-
     if (!cart) {
       res.status(404).json({ message: "Cart not found" });
       return;
     }
-
     const purchaserEmail = req.session.user.email;
     const purchaseResult = await service.purchaseCart(cid, purchaserEmail);
-
     if (purchaseResult.error) {
-      res.status(400).json({ message: purchaseResult.error, ticket: purchaseResult.ticket });
-    } else {
-      res.status(200).json({ message: purchaseResult.message, ticket: purchaseResult.ticket });
+      res.status(400).json({ message: purchaseResult.error, failedProducts: purchaseResult.failedProducts });
+      return;
     }
+    // Filtrar productos que no se pudieron comprar
+    const productsNotPurchased = cart.products.filter((product) => {
+      const purchasedProduct = purchaseResult.successfulProducts.find((p) => p.productId === product.id.toString());
+      return !purchasedProduct;
+    });
+    // Actualizar el carrito con los productos no comprados
+    await service.updateCart(cid, productsNotPurchased);
+    res.status(200).json({
+      message: "Purchase successful",
+      ticket: purchaseResult.ticket,
+      failedProducts: purchaseResult.failedProducts,
+    });
   } catch (error) {
     next(error);
   }
