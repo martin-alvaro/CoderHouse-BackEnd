@@ -120,12 +120,10 @@ export const purchaseCart = async (req, res, next) => {
       res.status(400).json({ message: purchaseResult.error, failedProducts: purchaseResult.failedProducts });
       return;
     }
-    // Filtrar productos que no se pudieron comprar
     const productsNotPurchased = cart.products.filter((product) => {
       const purchasedProduct = purchaseResult.successfulProducts.find((p) => p.productId === product.id.toString());
       return !purchasedProduct;
     });
-    // Actualizar el carrito con los productos no comprados
     await service.updateCart(cid, productsNotPurchased);
     res.status(200).json({
       message: "Purchase successful",
