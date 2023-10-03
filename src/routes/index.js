@@ -6,6 +6,7 @@ import viewsRouter from './viewsRouter.js'
 import messageRouter from './message.router.js'
 import sessionRouter from './sessionsRouter.js'
 import mockingRouter from './mockingRouter.js'
+import logger from './loggerRouter.js'
 
 const router = Router()
 
@@ -16,5 +17,6 @@ router.use("/api/chat", messageRouter);
 router.use("/users", userRouter);
 router.use('/api/sessions', sessionRouter)
 router.use('/mockingproducts', mockingRouter)
+router.use('/loggerTest', logger)
 
 export default router
