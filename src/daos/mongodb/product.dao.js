@@ -1,4 +1,5 @@
 import { productModel } from './models/product.model.js';
+import { logger } from '../../logger.js';
 
 export default class ProductDaoMongoDB {
  
@@ -11,19 +12,16 @@ export default class ProductDaoMongoDB {
       });
       return response;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
-  
-
-
 
   async create(product) {
     try {
       const response = await productModel.create(product);
       return response;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
@@ -32,17 +30,16 @@ export default class ProductDaoMongoDB {
       const response = await productModel.findById(id);
       return response;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
-
   async update(id, product) {
     try {
-      const response =await productModel.findByIdAndUpdate(id, product, {new:true})
-      return response
+      const response = await productModel.findByIdAndUpdate(id, product, { new: true });
+      return response;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
@@ -51,20 +48,20 @@ export default class ProductDaoMongoDB {
       const response = await productModel.findByIdAndDelete(id);
       return response;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
-  async aggregation(){
+  async aggregation() {
     try {
       const response = await productModel.aggregate([
         {
-          $match: {category: 'Camiseta'}
+          $match: { category: 'Camiseta' }
         }
-      ])
-      return response
+      ]);
+      return response;
     } catch (error) {
-      console.log(error);
-    } 
+      logger.error(error);
+    }
   }
 }

@@ -1,6 +1,7 @@
 import ProductDaoMongoDB from "../daos/mongodb/product.dao.js";
 import * as cartDao from "../daos/mongodb/cart.dao.js";
 import * as ticketService from "./ticket.service.js";
+import { logger } from '../logger.js';
 
 const productDao = new ProductDaoMongoDB();
 
@@ -9,7 +10,7 @@ export const getAll = async () => {
     const response = await cartDao.getAll();
     return response;
   } catch (error) {
-    console.log(error);
+    logger.info(error);
   }
 };
 
@@ -18,7 +19,7 @@ export const getById = async (id) => {
     const cart = await cartDao.getById(id);
     return cart || false;
   } catch (error) {
-    console.log(error);
+    logger.info(error);
   }
 };
 
@@ -27,7 +28,7 @@ export const create = async () => {
     const newCart = await cartDao.create();
     return newCart;
   } catch (error) {
-    console.log(error);
+    logger.info(error);
   }
 };
 
@@ -55,6 +56,7 @@ export const addProductToCart = async (id, productId) => {
     await cartDao.updateCart(id, cart.products);
     return cart;
   } catch (error) {
+    logger.info(error.message);
     throw new Error(error.message);
   }
 };
@@ -66,7 +68,7 @@ export const updateCart = async (id, products) => {
     await cartDao.updateCart(id, cart.products);
     return cart;
   } catch (error) {
-    console.log(error);
+    logger.info(error);
   }
 };
 
@@ -84,7 +86,7 @@ export const updateProduct = async (id, productId, quantity) => {
 
     return cart;
   } catch (error) {
-    console.log(error);
+    logger.info(error);
   }
 };
 
@@ -97,7 +99,7 @@ export const removeProductFromCart = async (id, productId) => {
     await cartDao.updateCart(id, cart.products);
     return cart;
   } catch (error) {
-    console.log(error);
+    logger.info(error);
   }
 };
 
@@ -108,6 +110,6 @@ export const removeAllProductsFromCart = async (id) => {
     await cartDao.updateCart(id, cart.products);
     return cart;
   } catch (error) {
-    console.log(error);
+    logger.info(error);
   }
 };

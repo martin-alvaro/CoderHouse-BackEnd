@@ -28,13 +28,14 @@ const logger = createLogger({
     })
   ),
   transports: [
-    new transports.Console({ level: 'debug' }),
+    new transports.Console({ level: 'info' }), 
     new transports.File({ filename: 'src/errors.log', level: 'error' }),
   ],
 });
 
+
 if (process.env.NODE_ENV === 'production') {
-  logger.transports[0].level = 'info';
+  logger.transports[0].level = 'info'; 
 }
 
 export { logger };

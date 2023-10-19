@@ -1,10 +1,12 @@
 import * as service from "../services/cart.services.js";
+import { logger } from '../logger.js';
 
 export const getAll = async (req, res, next) => {
   try {
     const response = await service.getAll();
     res.status(200).json(response);
   } catch (error) {
+    logger.error(error);
     next(error);
   }
 };
@@ -19,6 +21,7 @@ export const getById = async (req, res, next) => {
       res.status(404).json({ message: "Cart not found" });
     }
   } catch (error) {
+    logger.error(error);
     next(error);
   }
 };
@@ -28,6 +31,7 @@ export const create = async (req, res, next) => {
     const cart = await service.create();
     res.status(201).json(cart);
   } catch (error) {
+    logger.error(error);
     next(error);
   }
 };
@@ -43,7 +47,7 @@ export const addProductToCart = async (req, res, next) => {
       res.status(404).json({ message: "Not found" });
     }
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     next(error);
   }
 };
@@ -59,6 +63,7 @@ export const updateCart = async (req, res, next) => {
       res.status(404).json({ message: "Cart not found" });
     }
   } catch (error) {
+    logger.error(error);
     next(error);
   }
 };
@@ -74,6 +79,7 @@ export const updateProduct = async (req, res, next) => {
       res.status(404).json({ message: "Cart or product not found" });
     }
   } catch (error) {
+    logger.error(error);
     next(error);
   }
 };
@@ -88,6 +94,7 @@ export const removeProductFromCart = async (req, res, next) => {
       res.status(404).json({ message: "Cart or product not found" });
     }
   } catch (error) {
+    logger.error(error);
     next(error);
   }
 };
@@ -102,6 +109,7 @@ export const removeAllProductsFromCart = async (req, res, next) => {
       res.status(404).json({ message: "Cart not found" });
     }
   } catch (error) {
+    logger.error(error);
     next(error);
   }
 };
@@ -131,6 +139,7 @@ export const purchaseCart = async (req, res, next) => {
       failedProducts: purchaseResult.failedProducts,
     });
   } catch (error) {
+    logger.error(error);
     next(error);
   }
 };

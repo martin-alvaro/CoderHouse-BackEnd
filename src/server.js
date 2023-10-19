@@ -13,19 +13,23 @@ import passport from 'passport';
 import './passport/local-strategy.js'
 import './passport/github-strategy.js'
 import 'dotenv/config'
+import swaggerUiExpress from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
+
+import { logger } from './logger.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 const httpServer = app.listen(PORT, () => {
-    console.log("The server is already running on port: " + PORT);
+    logger.info(`The server is already running on port: ${PORT}`);
 });
 
 const socketServer = new Server(httpServer);
 app.set("io", socketServer);
 
 socketServer.on("connection", (socket) => {
-    console.log("New connection stablished", socket.id);
+    logger.info(`New connection stablished ${socket.id}`);
   
     socket.on("chat:newUser", (username) => {
       socket.username = username;
@@ -52,6 +56,21 @@ const mongoStoreOptions = {
     }
 };
 
+const swaggerOptions = {
+    swaggerDefinition: {
+      openapi: '3.0.1',
+      info: {
+        title: 'Documentacion',
+        description: 'Documentación de Productos y Carrito',
+      },
+    },
+    apis: [`${__dirname}/routes/productRouter.js`, `${__dirname}/routes/cartRouter.js`],
+  };
+  
+const swaggerConfig = swaggerJSDoc(swaggerOptions);
+
+
+
 app.use(cookieParser()); 
 app.use(session(mongoStoreOptions)); 
 app.use(express.json());
@@ -63,6 +82,8 @@ app.use(passport.session());
 app.use(express.static(__dirname + '/public'));
 
 app.use('/' , router)
+app.use('/api-docs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerConfig));
+
 
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');

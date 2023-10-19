@@ -1,11 +1,12 @@
 import { cartModel } from "./models/cart.model.js";
+import { logger } from '../../logger.js';
 
 export const getAll = async () => {
   try {
     const carts = await cartModel.find();
     return carts;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 
@@ -14,7 +15,7 @@ export const getById = async (id) => {
     const cart = await cartModel.findById(id);
     return cart || false;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 
@@ -23,7 +24,7 @@ export const create = async () => {
     const newCart = await cartModel.create({ products: [] });
     return newCart;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 
@@ -51,10 +52,10 @@ export const addProductToCart = async (id, productId) => {
     await cart.save();
     return cart;
   } catch (error) {
+    logger.error(error.message);
     throw new Error(error.message);
   }
 };
-
 
 export const removeProductFromCart = async (cartId, productId) => {
   try {
@@ -65,7 +66,7 @@ export const removeProductFromCart = async (cartId, productId) => {
     await cart.save();
     return cart;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 
@@ -76,7 +77,7 @@ export const updateCartProducts = async (cartId, products) => {
     await cart.save();
     return cart;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 
@@ -94,7 +95,7 @@ export const updateProduct = async (cartId, productId, quantity) => {
 
     return cart;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 
@@ -106,6 +107,6 @@ export const removeAllProductsFromCart = async (cartId) => {
     await cart.save();
     return cart;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };

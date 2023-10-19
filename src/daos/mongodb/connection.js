@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 import 'dotenv/config';
+import { logger } from '../../logger.js';
 
 const connectionString = process.env.MONGO_ATLAS_URL;
 
-try {   
+try {
     await mongoose.connect(connectionString);
-    console.log('Conectado a la base de datos de MongoDB!!');
+    logger.info('Conectado a la base de datos de MongoDB!!');
 } catch (error) {
-    console.log(error);
+    logger.error(error);
 }

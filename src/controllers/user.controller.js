@@ -1,29 +1,29 @@
 import UserDao from '../daos/mongodb/user.dao.js';
 import { UserDTO } from '../dto/user.dto.js';
 import transporter from '../mailling/transporter.js';
+import { logger } from '../logger.js';
 
 const userDao = new UserDao();
 
 export const registerUser = async (req, res) => {
   try {
-    const { email, password, first_name, last_name, isGithub, age } = req.body; 
+    const { email, password, first_name, last_name, isGithub, age } = req.body;
     const userDTO = new UserDTO(email, password, first_name, last_name, isGithub, age);
-    console.log('age ==' + age)
     const newUser = await userDao.registerUser(userDTO);
     if (newUser) {
-  
+
       const mailOptions = {
         from: 'martinalvaro3175@gmail.com',
-        to: email, 
-        subject: '¡Bienvenido a nuestra aplicación!', 
+        to: email,
+        subject: '¡Bienvenido a nuestra aplicación!',
         text: 'Gracias por registrarte en nuestra aplicación. ¡Esperamos que disfrutes tu experiencia!',
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          console.log(error);
+          logger.error(error);
         } else {
-          console.log('Correo electrónico de bienvenida enviado:', info.response);
+          logger.info('Correo electrónico de bienvenida enviado:', info.response);
         }
       });
 
@@ -32,7 +32,7 @@ export const registerUser = async (req, res) => {
       res.redirect('/errorRegister');
     }
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 
@@ -43,19 +43,19 @@ export const loginUser = async (req, res) => {
     const user = await userDao.loginUser(userDTO);
     if (user) {
       req.session.user = user;
-      res.redirect('/'); 
+      res.redirect('/');
     } else {
       res.redirect('/errorLogin');
     }
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 
 export const getCurrentUser = async (req, res) => {
   try {
     const user = req.session.user;
-    
+
     const currentUserDTO = {
       email: user.email,
       first_name: user.first_name,
@@ -66,67 +66,52 @@ export const getCurrentUser = async (req, res) => {
 
     res.json(currentUserDTO);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
 
-
-
-
 export const logoutUser = (req, res) => {
-    try {
-      req.session.destroy((err) => {
-        if (err) {
-          throw err; 
-        }
-        res.redirect('/login');
-      });
-    } catch (error) {
-      console.log(error); 
-      res.redirect('/'); 
-    }
-  };
-
-export const loginResponse = async(req,res,next)=>{
   try {
-    const user = await userDao.getById(req.session.passport.user)
+    req.session.destroy((err) => {
+      if (err) {
+        logger.error(err);
+        throw err;
+      }
+      res.redirect('/login');
+    });
+  } catch (error) {
+    logger.error(error);
+    res.redirect('/');
+  }
+};
+
+export const loginResponse = async (req, res, next) => {
+  try {
+    const user = await userDao.getById(req.session.passport.user);
     res.json({
       msg: 'Login ok',
       user
-    })
+    });
   } catch (error) {
-    next(error.message)
+    next(error.message);
   }
-}
+};
 
-export const githubResponse = async(req,res,next)=>{
+export const githubResponse = async (req, res, next) => {
   try {
-    const {firstNmae, lastName, email, isGithub}= req.user
-      res.json({
-        msg:'register o login ok',
-        session: req.session,
-        userData:{
-          firstNmae, lastName, email, isGithub
-        }
-      })
+    const { firstNmae, lastName, email, isGithub } = req.user;
+    res.json({
+      msg: 'register o login ok',
+      session: req.session,
+      userData: {
+        firstNmae,
+        lastName,
+        email,
+        isGithub
+      }
+    });
   } catch (error) {
-    next(error.message)
+    next(error.message);
   }
-}
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-  
+};

@@ -118,12 +118,74 @@ const router = Router()
 //     }
 //   });
   
+
+
+
+
 router.get('/', controller.getAll)
+/**
+ * @swagger
+ * /productos:
+ *   get:
+ *     summary: Obtener todos los productos
+ *     description: Obtiene la lista de todos los productos.
+ *     responses:
+ *       200:
+ *         description: Lista de productos obtenida con éxito.
+ *       500:
+ *         description: Error en el servidor.
+ */
+
 router.get('/aggregation', controller.aggregation)
+
 router.get('/:id', controller.getById)
+
 router.post('/', isAdmin, controller.create)
+/**
+ * @swagger
+ * /productos:
+ *   post:
+ *     summary: Crear un nuevo producto
+ *     description: Crea un nuevo producto utilizando los datos proporcionados.
+ *     responses:
+ *       200:
+ *         description: Producto creado con éxito.
+ *       400:
+ *         description: Parámetros no válidos.
+ *       500:
+ *         description: Error en el servidor.
+ */
+
 router.put('/:id', isAdmin, controller.update);
+/**
+ * @swagger
+ * /productos/{id}:
+ *   put:
+ *     summary: Actualizar un producto existente
+ *     description: Actualiza un producto existente utilizando los datos proporcionados.
+ *     responses:
+ *       200:
+ *         description: Producto actualizado con éxito.
+ *       404:
+ *         description: Producto no encontrado.
+ *       500:
+ *         description: Error en el servidor.
+ */
+
 router.delete('/:id', isAdmin, controller.remove);
+/**
+ * @swagger
+ * /productos/{id}:
+ *   delete:
+ *     summary: Eliminar un producto existente
+ *     description: Elimina un producto existente con el ID proporcionado.
+ *     responses:
+ *       200:
+ *         description: Producto eliminado con éxito.
+ *       404:
+ *         description: Producto no encontrado.
+ *       500:
+ *         description: Error en el servidor.
+ */
 
-
-  export default router
+export default router
