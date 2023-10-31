@@ -125,7 +125,7 @@ const router = Router()
 router.get('/', controller.getAll)
 /**
  * @swagger
- * /productos:
+ * /api/products:
  *   get:
  *     summary: Obtener todos los productos
  *     description: Obtiene la lista de todos los productos.
@@ -143,7 +143,7 @@ router.get('/:id', controller.getById)
 router.post('/', isAdmin, controller.create)
 /**
  * @swagger
- * /productos:
+ * /api/products:
  *   post:
  *     summary: Crear un nuevo producto
  *     description: Crea un nuevo producto utilizando los datos proporcionados.
@@ -159,7 +159,7 @@ router.post('/', isAdmin, controller.create)
 router.put('/:id', isAdmin, controller.update);
 /**
  * @swagger
- * /productos/{id}:
+ * /api/products/{id}:
  *   put:
  *     summary: Actualizar un producto existente
  *     description: Actualiza un producto existente utilizando los datos proporcionados.
@@ -175,7 +175,7 @@ router.put('/:id', isAdmin, controller.update);
 router.delete('/:id', isAdmin, controller.remove);
 /**
  * @swagger
- * /productos/{id}:
+ * /api/products/{id}:
  *   delete:
  *     summary: Eliminar un producto existente
  *     description: Elimina un producto existente con el ID proporcionado.
